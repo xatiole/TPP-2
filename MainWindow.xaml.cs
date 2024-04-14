@@ -14,16 +14,34 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _231_335_Шматов.А.М._2_
+namespace _231_335_Шматов.А.М._3_
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        int oper = 0;
+        string[] digits = new string[10000];
+        string[] equals = new string[10000];
         public MainWindow()
         {
             InitializeComponent();
+        }
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            Button_AC.Visibility = Visibility.Hidden;
+            history_label.Visibility = Visibility.Hidden;
+            AC_one.Visibility = Visibility.Hidden;
+            Check_box.Visibility = Visibility.Hidden;
+        }
+
+        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+        {
+            Button_AC.Visibility = Visibility.Visible;
+            history_label.Visibility = Visibility.Visible;
+            AC_one.Visibility = Visibility.Visible;
+            Check_box.Visibility = Visibility.Visible;
         }
 
         private void Button_1_Click(object sender, RoutedEventArgs e)
@@ -86,6 +104,9 @@ namespace _231_335_Шматов.А.М._2_
         private void Button_AC_Click(object sender, RoutedEventArgs e)
         {
             textlabel.Text = "";
+            Array.Clear(digits, 0, digits.Length);
+            Array.Clear(equals, 0, equals.Length);
+            history_label.Text = "";
         }
 
         private void Button_plus_Click(object sender, RoutedEventArgs e)
@@ -110,8 +131,49 @@ namespace _231_335_Шматов.А.М._2_
 
         private void Button_eq_Click(object sender, RoutedEventArgs e)
         {
-            string value = new DataTable().Compute(textlabel.Text, null).ToString();
-            textlabel.Text = value;
+            if (Check_box.IsChecked == true)
+            {
+
+                digits[oper] = textlabel.Text;
+                history_label.Text += digits[oper];
+                string value = new DataTable().Compute(textlabel.Text, null).ToString();
+                textlabel.Text = value;
+                history_label.Text += "=";
+                equals[oper] += value;
+                history_label.Text += value;
+                history_label.Text += " ";
+                oper += 1;
+            }
+            else
+            {
+                string value = new DataTable().Compute(textlabel.Text, null).ToString();
+                textlabel.Text = value;
+
+            }
+        }
+
+        private void Button_AC_one_Click(object sender, RoutedEventArgs e)
+        {
+            if (Check_box.IsChecked == true)
+            {
+                digits[oper - 1] = null;
+                equals[oper - 1] = null;
+                oper -= 1;
+                history_label.Text = "";
+                for (int i = 0; i < oper; i++)
+                {
+                    history_label.Text += digits[i];
+                    history_label.Text += "=";
+                    history_label.Text += equals[i];
+                    history_label.Text += " ";
+                }
+
+                textlabel.Text = "";
+            }
+            else
+            {
+                textlabel.Text = "";
+            }
         }
     }
 }
